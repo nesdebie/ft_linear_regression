@@ -4,7 +4,6 @@ import (
     "encoding/csv"
     "encoding/json"
     "fmt"
-    "log"
     "os"
     "strconv"
 
@@ -24,17 +23,22 @@ func estimatePrice(mileage, theta0, theta1 float64) float64 {
     return theta0 + theta1*mileage
 }
 
+func errorAndExit(reason string) {
+    fmt.Println(reason)
+    os.Exit(1)
+}
+
 func main() {
     file, err := os.Open("data.csv")
     if err != nil {
-        log.Fatal(err)
+        errorAndExit(err.Error())
     }
     defer file.Close()
 
     reader := csv.NewReader(file)
     rows, err := reader.ReadAll()
     if err != nil {
-        log.Fatal(err)
+        errorAndExit(err.Error())
     }
 
     var mileages, prices []float64
@@ -46,11 +50,11 @@ func main() {
         }
         mileage, err := strconv.ParseFloat(row[0], 64)
         if err != nil {
-            log.Fatalf("Error converting mileage: %v", err)
+            errorAndExit(err.Error())
         }
         price, err := strconv.ParseFloat(row[1], 64)
         if err != nil {
-            log.Fatalf("Error converting price: %v", err)
+            errorAndExit(err.Error())
         }
         mileages = append(mileages, mileage)
         prices = append(prices, price)
@@ -58,7 +62,7 @@ func main() {
     }
 
     if len(mileages) == 0 {
-        log.Fatal("Empty dataset, impossible to train.")
+        errorAndExit("error")
     }
 
     p := plot.New()
@@ -68,12 +72,12 @@ func main() {
 
     scatter, err := plotter.NewScatter(pts)
     if err != nil {
-        log.Fatalf("Failed to create scatter plot: %v", err)
+        errorAndExit(err.Error())
     }
     p.Add(scatter)
 
     if err := p.Save(6*vg.Inch, 4*vg.Inch, "img/price_vs_mileage.png"); err != nil {
-        log.Fatalf("Failed to save plot: %v", err)
+        errorAndExit(err.Error())
     }
     fmt.Println("Plot saved to img/price_vs_mileage.png")
 
@@ -122,13 +126,13 @@ func main() {
 
     modelFile, err := os.Create("model.json")
     if err != nil {
-        log.Fatal(err)
+        errorAndExit(err.Error())
     }
     defer modelFile.Close()
     enc := json.NewEncoder(modelFile)
     enc.SetIndent("", "  ")
     if err := enc.Encode(model); err != nil {
-        log.Fatal(err)
+        errorAndExit(err.Error())
     }
 
     fmt.Println("Model trained:")
