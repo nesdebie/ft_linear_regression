@@ -19,7 +19,7 @@ $(NAME):
 	@go build -o $(NAME2) $(SRC2)
 
 clean:
-	@rm -rf $(NAME) $(NAME2) go.mod go.sum model.json img
+	@rm -rf $(NAME) $(NAME2) go.mod go.sum model.json img model.txt
 
 re: clean all
 

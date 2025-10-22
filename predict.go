@@ -1,46 +1,51 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    "os"
+	"bufio"
+	"fmt"
+	"os"
 	"strconv"
+	"strings"
 )
 
-type Model struct {
-    Theta0 float64 `json:"theta0"`
-    Theta1 float64 `json:"theta1"`
-}
-
 func estimatePrice(mileage, theta0, theta1 float64) float64 {
-    return theta0 + theta1*mileage
+	return theta0 + theta1*mileage
 }
 
-func errorAndExit(reason string) {
-    fmt.Println("error: " + reason)
-    os.Exit(1)
+func readModel() (float64, float64) {
+	file, err := os.Open("model.txt")
+	if err != nil {
+		fmt.Println("File not fount. Default values : theta0 = 0, theta1 = 0.")
+		return 0.0, 0.0
+	}
+	defer file.Close()
+
+	var theta0, theta1 float64
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.HasPrefix(line, "theta0=") {
+			theta0, _ = strconv.ParseFloat(strings.TrimPrefix(line, "theta0="), 64)
+		}
+		if strings.HasPrefix(line, "theta1=") {
+			theta1, _ = strconv.ParseFloat(strings.TrimPrefix(line, "theta1="), 64)
+		}
+	}
+	return theta0, theta1
 }
 
 func main() {
-    modelFile, err := os.Open("model.json")
-    if err != nil {
-        errorAndExit(err.Error())
-    }
-    defer modelFile.Close()
+	theta0, theta1 := readModel()
 
-    var model Model
-    err = json.NewDecoder(modelFile).Decode(&model)
-    if err != nil {
-        errorAndExit(err.Error())
-    }
-
-    fmt.Print("Input the mileage : ")
+	fmt.Print("Input the mileage: ")
 	var input string
-    fmt.Scan(&input)
+	fmt.Scan(&input)
 	mileage, err := strconv.ParseFloat(input, 64)
 	if err != nil {
 		fmt.Printf("Invalid mileage: %v\n", err)
+		os.Exit(1)
 	}
-    price := estimatePrice(mileage, model.Theta0, model.Theta1)
-    fmt.Printf("Estimated price : %.2f\n", price)
+
+	price := estimatePrice(mileage, theta0, theta1)
+	fmt.Printf("Estimated price: %.2f\n", price)
 }
