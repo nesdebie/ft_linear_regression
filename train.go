@@ -86,6 +86,10 @@ func main() {
 		fmt.Printf("Invalid integer: %v\n", err)
 		os.Exit(1)
 	}
+    if iterations < 0 {
+		fmt.Println("Invalid integer: Must be greater or equal to 0.")
+		os.Exit(1)        
+    }
 
 	for i := 0; i < iterations; i++ {
 		sum0, sum1 := 0.0, 0.0
