@@ -77,7 +77,15 @@ func main() {
 	theta0 := 0.0
 	theta1 := 0.0
 	learningRate := 0.1
-	iterations := 1000
+
+	fmt.Print("Amount of iterations: ")
+	var input string
+	fmt.Scan(&input)
+	iterations, err := strconv.Atoi(input)
+	if err != nil {
+		fmt.Printf("Invalid integer: %v\n", err)
+		os.Exit(1)
+	}
 
 	for i := 0; i < iterations; i++ {
 		sum0, sum1 := 0.0, 0.0
@@ -126,7 +134,8 @@ func main() {
 	line.Width = vg.Points(2)
 	p.Add(line)
 
-	if err := p.Save(8*vg.Inch, 5*vg.Inch, "img/price_vs_mileage.png"); err != nil {
+    filePath := "img/price_vs_mileage_" + input + ".png"
+	if err := p.Save(8*vg.Inch, 5*vg.Inch, filePath); err != nil {
 		errorAndExit(err.Error())
 	}
 	fmt.Println("Plot created ! Check ./img/price_vs_mileage.png\n")
