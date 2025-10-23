@@ -142,7 +142,7 @@ func main() {
 	if err := p.Save(8*vg.Inch, 5*vg.Inch, filePath); err != nil {
 		errorAndExit(err.Error())
 	}
-	fmt.Println("Plot created ! Check ./img/price_vs_mileage.png\n")
+	fmt.Println("Plot created ! Check ", filePath, "\n")
 
     fmt.Println("-----theta0 and theta1-----")
 	fmt.Printf("Theta0 = %.5f\nTheta1 = %.5f\n", realTheta0, realTheta1)
