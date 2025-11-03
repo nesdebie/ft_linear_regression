@@ -115,8 +115,6 @@ func main() {
 	defer f.Close()
 	fmt.Fprintf(f, "theta0=%.10f\n", realTheta0)
 	fmt.Fprintf(f, "theta1=%.10f\n", realTheta1)
-	fmt.Fprintf(f, "min_mileage=%.2f\n", minMil)
-	fmt.Fprintf(f, "max_mileage=%.2f\n", maxMil)
     fmt.Println("---------------------------\n")
 	fmt.Println("Model saved to ./model.txt")
 

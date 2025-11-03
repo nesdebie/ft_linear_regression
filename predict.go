@@ -30,6 +30,10 @@ func readModel() (float64, float64) {
 		if strings.HasPrefix(line, "theta1=") {
 			theta1, _ = strconv.ParseFloat(strings.TrimPrefix(line, "theta1="), 64)
 		}
+        if !strings.HasPrefix(line, "theta0=") && !strings.HasPrefix(line, "theta1=") {
+            fmt.Println("Model file is corrupted. Default values : theta0 = 0, theta1 = 0.")
+            return 0.0, 0.0
+        }
 	}
 	return theta0, theta1
 }
@@ -45,6 +49,10 @@ func main() {
 		fmt.Printf("Invalid mileage: %v\n", err)
 		os.Exit(1)
 	}
+    if mileage < 0 {
+        fmt.Println("Mileage cannot be negative.")
+        os.Exit(1)
+    }
 
 	price := estimatePrice(mileage, theta0, theta1)
 	fmt.Printf("Estimated price: %.2f\n", price)
