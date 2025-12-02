@@ -37,7 +37,7 @@ func createModelFile(theta0, theta1 float64) {
 }
 
 
-func fillGraphicPlot(pts plotter.XYs, theta0, theta1 float64, input string) {
+func createGraphicPlot(pts plotter.XYs, theta0, theta1 float64, input string) {
 	p := plot.New()
 	p.Title.Text = "Car Price vs Mileage"
 	p.X.Label.Text = "Mileage (km)"
@@ -162,7 +162,7 @@ func main() {
 
 	input, theta0, theta1 := linearRegression(mileages, prices, normMil, minMil, maxMil)
 	createModelFile(theta0, theta1)
-	fillGraphicPlot(pts, theta0, theta1, input)
+	createGraphicPlot(pts, theta0, theta1, input)
 
     fmt.Println("-----theta0 and theta1-----")
 	fmt.Printf("Theta0 = %.5f\nTheta1 = %.5f\n", theta0, theta1)
