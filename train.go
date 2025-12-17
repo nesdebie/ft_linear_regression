@@ -70,7 +70,9 @@ func parseData(file *os.File) ([]float64, []float64, plotter.XYs) {
 	if err != nil {
 		errorAndExit(err.Error())
 	}
-
+	if len(rows) < 1 {
+		errorAndExit("no data")
+	}
 	var mileages, prices []float64
 	pts := make(plotter.XYs, 0, len(rows)-1)
 
